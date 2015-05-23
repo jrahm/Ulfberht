@@ -1,0 +1,6 @@
+*.swp
+*.swo
+*.o
+*.a
+_*_obs
+Makefile
