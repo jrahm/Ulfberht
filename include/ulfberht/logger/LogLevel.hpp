@@ -19,8 +19,8 @@ public:
     inline const char* getEscapeSequence() const
         {return m_esc.c_str();}
 
-    inline const char* getName() const
-        {return m_name.c_str();}
+    inline const std::string& getName() const
+        {return m_name;}
 
     inline bool operator>(const LogLevel& oth) const
         { return m_level > oth.m_level; } 
@@ -42,16 +42,16 @@ private:
     u32_t m_level;
 };
 
-extern LogLevel ZERO; /* 0 */
-
-extern LogLevel VERBOSE; /* 5 */
-extern LogLevel TRACE;   /* 10 */
-extern LogLevel DEBUG;   /* 20 */
-extern LogLevel INFO;    /* 40 */
-extern LogLevel WARN;    /* 80 */
-extern LogLevel ERROR;   /* 160 */
-extern LogLevel FATAL;   /* 320 */
-
 }
+
+extern logger::LogLevel ZERO; /* 0 */
+
+extern logger::LogLevel VERBOSE; /* 5 */
+extern logger::LogLevel TRACE;   /* 10 */
+extern logger::LogLevel DEBUG;   /* 20 */
+extern logger::LogLevel INFO;    /* 40 */
+extern logger::LogLevel WARN;    /* 80 */
+extern logger::LogLevel ERROR;   /* 160 */
+extern logger::LogLevel FATAL;   /* 320 */
 
 #endif /* INCLUDE_ULFBERHT_LOGGER_LOGLEVEL_ */

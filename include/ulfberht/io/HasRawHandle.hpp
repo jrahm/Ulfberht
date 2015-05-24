@@ -27,7 +27,7 @@ public:
 
 class HasRawHandleTempl: public HasRawHandle {
 public:
-    virtual inline raw_handle_t getRawHandle() { return m_handle; }
+    virtual inline raw_handle_t getRawHandle() OVERRIDE { return m_handle; }
 
 protected:
     raw_handle_t m_handle;

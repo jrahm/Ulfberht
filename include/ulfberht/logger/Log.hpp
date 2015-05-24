@@ -24,22 +24,32 @@ public:
 
     void printfln(const LogLevel& level, const char* fmt, ...);
     void vprintfln(const LogLevel& level, const char* fmt, va_list lst);
+    void vprintf(const LogLevel& level, const char* fmt, va_list lst);
+    void printf(const LogLevel& level, const char* fmt, ...);
 
     void setLogOutput(LogOutput& lo)
         { m_log_output = lo; }
 
     inline void setMinimumLogLevel(const LogLevel& ll)
-        { m_min_log_level = ll; }
+        { m_min_log_level = &ll; }
 
     inline const LogLevel& getMinimumLogLevel() const
-        { return m_min_log_level; }
+        { return *m_min_log_level; }
+
+    inline bool isEnabled()
+        { return m_enabled; }
+
+    inline void setEnabled(bool enabled)
+        { m_enabled = enabled; };
 
 private:
-    void _vprintfln(const LogLevel& level, const char* fmt, va_list lst);
+    void _vprintf(const LogLevel& level, const char* fmt, va_list lst);
 
     std::string m_prefix_str;
     LogOutput m_log_output;
-    LogLevel m_min_log_level;
+    const LogLevel* m_min_log_level;
+
+    bool m_enabled;
 };
 
 }

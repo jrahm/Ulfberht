@@ -8,12 +8,15 @@
  */
 
 #include <ulfberht/io/BaseOutput.hpp>
+#include <ulfberht/io/BaseInput.hpp>
 
 namespace lang {
 
 class System {
 public:
-    io::BaseOutput out;
+    static io::BaseOutput& out;
+    static io::BaseOutput& err;
+    static io::BaseInput& in;
 };
 
 }

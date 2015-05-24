@@ -14,7 +14,7 @@
 
 namespace io {
 
-class Handle: public BaseIO, public HasRawHandle {
+class Handle: public BaseIO, public HasRawHandleTempl {
 public:
     inline Handle(raw_handle_t handle)
         { m_handle = handle; }
@@ -25,6 +25,16 @@ public:
 
     inline ssize_t read(byte* bytes, size_t len) OVERRIDE {
         return ::read(m_handle, bytes, len);
+    }
+
+    inline int read() {
+        byte b;
+        if(::read(m_handle, &b, 1) > 0) return b;
+        return -1;
+    }
+
+    inline virtual bool write(byte b) {
+        return ::write(m_handle, &b, 1) > 0;
     }
 
     virtual inline ~Handle() {

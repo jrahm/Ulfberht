@@ -8,28 +8,29 @@
  */
 
 #include <ulfberht/logger/Log.hpp>
-#include <ulfberht/logger/LogContext.hpp>
+#include <ulfberht/logger/LogPath.hpp>
 
 namespace logger {
 
-#define GET_LOG(context) \
-    LogManager::instance().getLogContext(context)
+#define GET_LOG(path) \
+    LogManager::instance().getLog(path)
 
 class LogManager {
 public:
     static LogManager& instance();
 
-    virtual Log& getLogContext(const LogPath& ctx) = 0;
-    inline virtual Log& getLogContext(const char* path) 
-        { return getLogContext(LogPath(path)); }
+    virtual void setLogOutput(LogOutput& output) = 0;
 
-    virtual void disableLogPath(const LogPath& path) = 0;
-    inline virtual void disableLogPath(const char* path)
-        { disableLogPath(LogPath(path)); }
+    virtual Log& getLog(const LogPath& ctx) = 0;
+    inline virtual Log& getLog(const char* path) 
+        { return getLog(LogPath(path)); }
 
-    virtual void enableLogPath(const LogPath& path) = 0;
-    inline virtual void enableLogPath(const char* path)
-        { enableLogPath(path); }
+    virtual void setLogEnabled(const LogPath& path, bool enabled)
+        { getLog(path).setEnabled(enabled); }
+    inline virtual void setLogEnabled(const char* path, bool enabled)
+        { setLogEnabled(LogPath(path), enabled); };
+
+    virtual void setEnableByDefault(bool enable) = 0;
     
     /**
      * @brief Enables all logs, current and future at all log levels.
@@ -43,6 +44,8 @@ public:
      * @brief Similar to the above, but disables all logging
      */
     virtual void logNothing() = 0;
+
+    virtual inline ~LogManager() {};
 };
 
 }
