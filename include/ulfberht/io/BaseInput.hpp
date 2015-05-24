@@ -50,6 +50,8 @@ virtual inline ssize_t read(byte* into, size_t len) {
  * error, -1 is returned to indicate no data.
  */
 virtual int read() = 0;
+
+virtual inline ~BaseInput() {};
     
 };
 

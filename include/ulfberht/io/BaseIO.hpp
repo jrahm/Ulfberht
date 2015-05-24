@@ -16,7 +16,8 @@ namespace io {
  * @brief Combination of the BaseInput and BaseOutput classes.
  */
 class BaseIO: public BaseInput, public BaseOutput {
-    /* empty */
+public:
+    virtual inline ~BaseIO() {};
 };
 
 };

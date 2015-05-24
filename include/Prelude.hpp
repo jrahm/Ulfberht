@@ -33,9 +33,11 @@ typedef long double lf_t;
 
 typedef u8_t byte;
 
-typedef int handle_t;
+/* TODO port to Windows. */
+typedef int raw_handle_t;
 
 
 #define ABSTRACT
+#define OVERRIDE override
 
 #endif /* INCLUDE_PRELUDE_ */

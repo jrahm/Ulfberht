@@ -27,7 +27,7 @@ public:
  * stream. This function is not guaranteed to write
  * all the bytes to the output stream.
  */
-virtual inline size_t write(byte* out, size_t len) {
+virtual inline size_t write(const byte* out, size_t len) {
     for(size_t i = 0; i < len; ++ i) {
         if(!write(out[i])) return i;
     }
@@ -41,6 +41,8 @@ virtual inline size_t write(byte* out, size_t len) {
  *          false if some expected error occured
  */
 virtual bool write(byte val) = 0;
+
+virtual inline ~BaseOutput() {};
 
 };
 
