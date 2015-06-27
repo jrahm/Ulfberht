@@ -8,6 +8,7 @@ int main(int argc, char** argv) {
 
 	LogManager::instance().logEverything();
 
+	log.printfln(VERBOSE, "This should appear!");
 	log.printfln(INFO, "Hello, World!");
 
 	LogManager::instance().setLogEnabled("Test/Fn", false);

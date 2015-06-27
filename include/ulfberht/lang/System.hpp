@@ -10,6 +10,8 @@
 #include <ulfberht/io/BaseOutput.hpp>
 #include <ulfberht/io/BaseInput.hpp>
 
+#include <ulfberht/lang/ExceptionHandler.hpp>
+
 namespace lang {
 
 class System {
@@ -17,6 +19,10 @@ public:
     static io::BaseOutput& out;
     static io::BaseOutput& err;
     static io::BaseInput& in;
+
+    static ExceptionHandler<Exception>& getGlobalUncaughtExceptionHandler();
+    static void setGlobalUncaughtExceptionHandler(ExceptionHandler<Exception>& exh);
+
 };
 
 }
