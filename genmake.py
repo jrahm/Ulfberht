@@ -101,6 +101,8 @@ LDFLAGS := ''' + str(platform_ldflags) + ''' $(LDFLAGS) -lpthread -lcurl -ljanss
 QEMU?=
 export QEMU
 
+PREFIX?=/usr
+
 default: all
 '''
 
@@ -121,6 +123,15 @@ test: tests
 
 cleanall:
 	for i in $$(find . -name '_*_obs') ; do rm -rfv $$i ; done
+
+install:
+	cp -rv include/ulfberht $(PREFIX)/include
+	cp -rv include/Prelude.hpp $(PREFIX)/include
+	chmod -Rv 644 $(PREFIX)/include/Prelude.hpp
+	chmod -Rv 644 $(PREFIX)/include/ulfberht
+	find $(PREFIX)/include/ulfberht -type d -exec chmod -v 755 {} \;
+	cp -v _$(TGT)_obs/libulfberht.a $(PREFIX)/lib
+	chmod -v 755 $(PREFIX)/lib/libulfberht.a
 
 .PHONY: doc
 doc:
@@ -221,7 +232,7 @@ def main(_):
     sys.stdout.write('\t$(AR) -rcs ' + OBJS_DIR + BINARY + ' ' + '\\\n    '.join(object_files_no_tests) + '\n\n')
 
     sys.stdout.write('notests: ' + OBJS_DIR + BINARY + '\n')
-    sys.stdout.write('\t$(CXX) -o main ' + OBJS_DIR + BINARY + '$(LDFLAGS)\n\n')
+    sys.stdout.write('\n')
 
     sys.stdout.write('tests: ' + '\\\n    '.join(test_binaries))
     sys.stdout.write('\n\n')

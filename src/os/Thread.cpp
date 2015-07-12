@@ -1,33 +1,59 @@
 #include <ulfberht/os/Thread.hpp>
 #include <map>
 
-using namespace std;
+#include <Prelude.hpp>
+#include <ulfberht/logger/LogManager.hpp>
+#include <ulfberht/lang/Exception.hpp>
+#include <ulfberht/lang/System.hpp>
+
+using namespace logger;
 using namespace lang;
 
 namespace os {
 
-void* os_Thread__thread_start(void* runner) {
-    Runnable* l_runner = (Runnable*) runner;
-    l_runner->run();
 
-    pthread_exit(NULL);
+std::map<pthread_t, Thread*> s_thread_db;
+
+Thread* Thread::getCurrentThread() {
+    return s_thread_db[pthread_self()];
 }
 
-map<pthread_t, Thread*> s_thread_db;
-
-Thread* Thread::currentThread() {
-    pthread_t key = pthread_self();
-    map<pthread_t,Thread*>::iterator itr;
-
-    itr = s_thread_db.find(key);
-    if(itr == s_thread_db.end()) {
-        return NULL;
+static void* run_thread( void* _thread ) {
+    try {
+    	Thread* thread = (Thread*) _thread;
+    	thread->getRunnable().run();
+    } catch(Exception& ex) {
+        System::getGlobalUncaughtExceptionHandler().onException(ex);
     }
 
-    return itr->second;
+	pthread_exit(NULL);
 }
 
-Thread::Thread(lang::Runnable& runner):
-    m_runner(runner) {}
+Thread::Thread(Runnable& runner) : m_runner(runner) {
+	m_thread = (pthread_t)0;
+    joined = false;
+}
+
+int Thread::start() {
+    int rc;
+	rc = pthread_create(&m_thread, NULL, run_thread, this);
+    s_thread_db[m_thread] = this;
+    return rc;
+}
+
+int Thread::join() {
+    if( ! joined ) {
+        int ret;
+    	ret = pthread_join(m_thread, NULL);
+        joined = true;
+        return ret;
+    }
+    return 0;
+}
+
+Thread::~Thread() {
+    join();
+    s_thread_db[m_thread]=NULL;
+}
 
 }

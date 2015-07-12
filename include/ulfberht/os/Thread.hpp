@@ -1,60 +1,61 @@
-#ifndef INCLUDE_ULFBERHT_OS_THREAD_
-#define INCLUDE_ULFBERHT_OS_THREAD_
-
-/*
- * Author: jrahm
- * created: 2015/05/22
- * Thread.hpp: <description>
- */
-
-#include <ulfberht/lang/Runnable.hpp>
+#ifndef THREAD_HPP_
+#define THREAD_HPP_
 
 #include <pthread.h>
+#include <ulfberht/os/Runnable.hpp>
 
 namespace os {
 
-typedef int thread_id_t;
-
+/** 
+ * @brief A simple thread class that accepts a runnable as a delegate.
+ *
+ * This class should not be extendend.
+ * instead such things should be done through the runnable
+ * delegate
+ *
+ * @see Mutex
+ * @see ScopedLock
+ * @see Condition
+ * @see containers::BlockingQueue
+ */
 class Thread {
 public:
-    /**
-     * @brief Creates a new thread that runs the runnable once it starts
-     * @param runner The runnable to run at the start
-     */
-    Thread(lang::Runnable& runner);
+    static Thread* getCurrentThread();
 
-    static Thread* currentThread();
-    
-    /**
-     * @brief return the id of the thread
-     * @return the id of the thread
-     */
-    virtual thread_id_t getId() const;
-    
-    /**
-     * @brief Start the current thread
-     */
-    virtual void start();
+    static inline Thread* begin(Runnable& runner) {
+        Thread* ret = new Thread(runner);
+        ret->start();
+        return ret;
+    }
 
     /**
-     * @brief Waits for this thread to complete
+     * @brief Construct a Thread from the given Runnable
+     * @param runner The runnable to delegate to
      */
-    virtual void join();
+    Thread(Runnable& runner) ;
+
+	/** Start the thread */
+	int start();
+
+	/** Join the thread */
+	int join();
+
 
     /**
-     * @return the runnable for this thread
+     * @brief Return the delegate
+     * @return Return the runnable used
      */
-    virtual const lang::Runnable& getRunnable() const;
-    virtual lang::Runnable& getRunnable();
+	inline Runnable& getRunnable() { return m_runner; }
 
+	inline const Runnable& getRunnable() const { return m_runner; }
 
-    pthread_t raw();
-
+    virtual ~Thread();
 private:
-    pthread_t m_thread;
-    lang::Runnable& m_runner;
+	Runnable& m_runner;
+	pthread_t m_thread;
+    bool joined;
 };
 
 }
 
-#endif /* INCLUDE_ULFBERHT_OS_THREAD_ */
+#endif

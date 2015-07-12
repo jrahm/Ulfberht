@@ -6,6 +6,8 @@
 #include <string>
 #include <vector>
 
+#include <ulfberht/io/BaseOutput.hpp>
+
 
 namespace lang {
 
@@ -24,8 +26,16 @@ public:
      */
     virtual const std::string& getMessage() const;
 
-private:
+    /**
+     * Print a stack trace to an output stream
+     */
+    virtual void printStackTrace(io::BaseOutput& out) const;
+
+protected:
+    inline Exception(){};
     std::string m_message;
+
+private:
 	std::vector<void*> m_backtrace;
 };
 
