@@ -130,6 +130,8 @@ public:
     ~uptr() {
         unref();
     }
+
+    bool isNull() const { return mine == NULL; }
 private:
     T* mine;
     int* nref;
